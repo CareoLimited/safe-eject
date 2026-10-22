@@ -254,7 +254,8 @@ class TestHttpHandlerDirect(IsolatedTestCase):
         for length in ('-1', 'bad', '0', '999999'):
             with self.subTest(length=length):
                 out = self._execute_request('POST', '/api/kill', headers={'Content-Length': length})
-                self.assertIn('413 Request Entity Too Large' if length == '999999' else '400 Bad Request', out)
+                # Python 3.13 renamed 413's reason phrase, so only the code is checked
+                self.assertIn('HTTP/1.0 413 ' if length == '999999' else '400 Bad Request', out)
 
     def test_payload_types_are_checked(self):
         cases = [('/api/kill', {'pid': True}), ('/api/kill', {'pid': 99999, 'force': 'false'}),

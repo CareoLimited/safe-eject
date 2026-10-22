@@ -8,8 +8,11 @@ jobs:
   test:
     runs-on: macos-latest
     steps:
-      - uses: actions/checkout@v4
-      - name: Python tests
-        run: python3 -m unittest discover tests/
-      - name: UI tests
+      - uses: actions/checkout@v5
+      # The oldest Python SafeEject supports is the one macOS ships with
+      - name: Python tests (macOS system Python)
+        run: /usr/bin/python3 --version && /usr/bin/python3 -m unittest discover tests/
+      - name: Python tests (latest Python)
+        run: python3 --version && python3 -m unittest discover tests/
+      - name: Dashboard tests
         run: node tests/test_app.js
