@@ -8,7 +8,7 @@ class SafeEject < Formula
   desc "See what keeps a macOS disk busy, close it, and eject it safely"
   homepage "https://github.com/CareoLimited/safe-eject"
   url "https://github.com/CareoLimited/safe-eject/archive/refs/tags/v1.0.0.tar.gz"
-  sha256 "0000000000000000000000000000000000000000000000000000000000000000"
+  sha256 "55da962e7eb236f4cb39a4a258d5cce3099fe28c1ae4bf4c756651e6fcbccd88"
   license "MIT"
 
   depends_on :macos
