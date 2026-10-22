@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light dark">
+  <title>SafeEject</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230a84ff'/%3E%3Cpath d='M16 8 8.5 17.5h15L16 8Z' fill='white' stroke='white' stroke-linejoin='round'/%3E%3Crect x='8.5' y='20.5' width='15' height='3' rx='1.5' fill='white'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="dark-theme">
+  <div class="window">
+
+    <!-- Disks -->
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark" data-icon="eject"></div>
+        <div class="brand-text">
+          <span class="brand-name">SafeEject</span>
+          <span id="version-tag" class="brand-version"></span>
+        </div>
+        <div class="brand-actions">
+          <span id="demo-badge" class="demo-badge hidden" title="Made-up disks and processes. Nothing on this Mac is touched.">Demo</span>
+          <button id="btn-refresh-volumes" class="icon-btn small" title="Reload disks" aria-label="Reload disks" data-icon="refresh"></button>
+        </div>
+      </div>
+
+      <div class="sidebar-section">
+        <div id="volume-list" class="volume-list">
+          <div class="sidebar-placeholder">Looking for disks…</div>
+        </div>
+      </div>
+
+      <div class="sidebar-footer">Pick a disk to see what's keeping it busy.</div>
+    </aside>
+
+    <!-- Selected disk -->
+    <main class="content">
+      <header class="toolbar">
+        <div id="toolbar-title" class="toolbar-title"></div>
+        <div class="toolbar-actions">
+          <button id="btn-auto-refresh" class="live-toggle" title="Rescan the selected disk every 3 seconds">
+            <span id="live-dot" class="live-dot"></span>
+            <span id="status-text">Live</span>
+          </button>
+          <button id="btn-refresh-locks" class="icon-btn" title="Rescan now" aria-label="Rescan now" data-icon="refresh"></button>
+          <button id="btn-theme-toggle" class="icon-btn" title="Switch light and dark" aria-label="Switch light and dark">
+            <span id="theme-icon"></span>
+          </button>
+        </div>
+      </header>
+
+      <div class="scroll">
+        <div class="page">
+          <section class="disk-header">
+            <div id="disk-icon" class="disk-icon" data-icon="drive"></div>
+            <div class="disk-titles">
+              <h1 id="current-volume-name">No disk selected</h1>
+              <div id="disk-meta" class="disk-meta">Pick a disk on the left.</div>
+              <div id="disk-usage" class="disk-usage hidden">
+                <div class="usage-bar"><div id="usage-fill" class="usage-fill"></div></div>
+                <span id="usage-text"></span>
+              </div>
+            </div>
+          </section>
+
+          <section id="status-card" class="status-card tone-neutral">
+            <div class="status-main">
+              <div id="status-icon" class="status-icon"></div>
+              <div class="status-text">
+                <h2 id="status-title">No disk selected</h2>
+                <p id="status-message">Pick a disk to see what's keeping it busy.</p>
+              </div>
+              <div class="status-actions">
+                <button id="btn-kill-all" class="btn btn-secondary hidden" disabled>Quit All</button>
+                <button id="btn-safe-eject" class="btn btn-primary hidden" disabled>Eject</button>
+              </div>
+            </div>
+            <div id="spotlight-row" class="status-footer hidden">
+              <span class="footer-icon" data-icon="search"></span>
+              <span id="spotlight-text"></span>
+              <button id="btn-spotlight" class="link-btn"></button>
+            </div>
+          </section>
+
+          <section class="list-controls">
+            <div class="search-field">
+              <span class="search-icon" data-icon="search"></span>
+              <input type="search" id="filter-search" placeholder="Search name, PID or path" autocomplete="off" spellcheck="false">
+            </div>
+            <div class="segmented" role="tablist" aria-label="Filter by type">
+              <button class="filter-pill active" data-cat="all">All <span id="count-all" class="seg-count">0</span></button>
+              <button class="filter-pill" data-cat="ai">AI Agents <span id="count-ai" class="seg-count">0</span></button>
+              <button class="filter-pill" data-cat="dev">Dev Tools <span id="count-dev" class="seg-count">0</span></button>
+              <button class="filter-pill" data-cat="terminal">Terminals <span id="count-terminal" class="seg-count">0</span></button>
+              <button class="filter-pill" data-cat="app">Apps <span id="count-app" class="seg-count">0</span></button>
+              <button class="filter-pill" data-cat="system">macOS <span id="count-system" class="seg-count">0</span></button>
+            </div>
+          </section>
+
+          <section id="locks-container" class="process-list"></section>
+        </div>
+      </div>
+
+      <footer class="statusbar">
+        <button id="log-toggle" class="statusbar-button" title="Show activity">
+          <span class="status-dot"></span>
+          <span id="last-action-text">Ready</span>
+          <span class="drawer-arrow" data-icon="chevronUp"></span>
+        </button>
+        <div id="log-content" class="log-panel">
+          <div class="log-entry info">SafeEject started.</div>
+        </div>
+      </footer>
+    </main>
+  </div>
+
+  <!-- Alert -->
+  <div id="confirm-modal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div class="modal-card">
+      <button id="modal-close" class="icon-btn small modal-close" aria-label="Close" data-icon="close"></button>
+      <div class="modal-icon" data-icon="eject"></div>
+      <h3 id="modal-title">Are you sure?</h3>
+      <p id="modal-message"></p>
+      <div id="modal-details" class="modal-details"></div>
+      <div class="modal-buttons">
+        <button id="modal-cancel" class="btn btn-secondary">Cancel</button>
+        <button id="modal-confirm" class="btn btn-danger">Confirm</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast-container" class="toast-container" aria-live="polite"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
