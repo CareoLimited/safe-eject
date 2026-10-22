@@ -66,8 +66,14 @@ brew tap careolimited/safe-eject https://github.com/CareoLimited/safe-eject
 ```
 
 ```bash
+brew trust careolimited/safe-eject
+```
+
+```bash
 brew install safe-eject
 ```
+
+Recent Homebrew versions only install from taps you have marked as trusted, which is what the second command does. If your Homebrew says `trust` is an unknown command, skip it.
 
 Then start it with:
 
