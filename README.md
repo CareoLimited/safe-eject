@@ -62,7 +62,11 @@ Even after you close your AI agents (Claude, Codex, Cursor…) and terminal wind
 ### Homebrew (recommended)
 
 ```bash
-brew install careolimited/tap/safe-eject
+brew tap careolimited/safe-eject https://github.com/CareoLimited/safe-eject
+```
+
+```bash
+brew install safe-eject
 ```
 
 Then start it with:
@@ -164,7 +168,8 @@ safe-eject/
 │   ├── index.html         # Dashboard
 │   ├── style.css          # Light and dark theme styles
 │   └── app.js             # Dashboard logic
-├── packaging/homebrew/    # Homebrew formula and the script that updates it for a release
+├── Formula/               # Homebrew formula (this repo is also the tap)
+├── scripts/               # Release helper that updates the formula
 ├── docs/                  # Icon, screenshots and social preview image
 └── tests/
     ├── test_safe_eject.py # Python tests

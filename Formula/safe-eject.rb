@@ -1,11 +1,9 @@
-# Homebrew formula for SafeEject.
+# Homebrew formula for SafeEject. This repository doubles as its tap:
+#   brew tap careolimited/safe-eject https://github.com/CareoLimited/safe-eject
+#   brew install safe-eject
 #
-# It is published from the CareoLimited/homebrew-tap repository, so people can run:
-#   brew install careolimited/tap/safe-eject
-#
-# For each release: tag it (v1.0.0), run update-formula.sh with the version to
-# fill in the url and sha256 below, then copy this file to Formula/safe-eject.rb
-# in the tap repository.
+# For each release: push a tag (v1.0.0), then run scripts/update-formula.sh with
+# the version to fill in the url and sha256 below, and commit the result.
 class SafeEject < Formula
   desc "See what keeps a macOS disk busy, close it, and eject it safely"
   homepage "https://github.com/CareoLimited/safe-eject"
